@@ -2,6 +2,9 @@ server:
   port: 8080
 
 jenkins2discord:
+  request:
+    read-timeout: 5000
+    connect-timeout: 5000
   jenkins:
     address: http://localhost:8080
   discord:
