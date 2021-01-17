@@ -25,16 +25,21 @@ public class OnStartValidator implements ApplicationListener<ContextRefreshedEve
   }
 
   public void autoValidate() {
-    List<String> errors = new ArrayList<>();
+    List<Exception> errors = new ArrayList<>();
     autoValidators.forEach(runValidation(errors));
 
     if (!errors.isEmpty()) {
-      String errorMessage = String.join(";", errors);
-      throw new StartupException(errorMessage);
+      log.error("Got startup errors:");
+      for (int i = 0; i < errors.size(); i++) {
+        Exception exception = errors.get(i);
+        log.error("Startup error #" + (i + 1) + ": " + exception.getMessage(), exception);
+      }
+      throw new StartupException(
+          "There are startup errors (count = " + errors.size() + "). Please check the log above.");
     }
   }
 
-  private Consumer<AutoValidator> runValidation(@NonNull List<String> errors) {
+  private Consumer<AutoValidator> runValidation(@NonNull List<Exception> errors) {
     return validator -> {
       String validatorName = validator.getClass().getSimpleName();
       log.info("Running validator: {}", validatorName);
@@ -43,7 +48,7 @@ public class OnStartValidator implements ApplicationListener<ContextRefreshedEve
         log.info("{}: SUCCESS", validatorName);
       } catch (Exception e) {
         log.error("{}: FAIL", validatorName);
-        errors.add(e.getMessage());
+        errors.add(e);
       }
     };
   }

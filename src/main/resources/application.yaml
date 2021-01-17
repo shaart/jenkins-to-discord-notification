@@ -2,7 +2,7 @@ server:
   port: 8080
 
 logging:
-  level: INFO
+  level:
     com:
       github:
         shaart:
@@ -15,6 +15,9 @@ jenkins2discord:
     connect-timeout: 5000
   jenkins:
     address: http://localhost:8080
+    user:
+      username: admin
+      password: admin
   discord:
     webhook:
       url:

@@ -9,7 +9,7 @@ public class JenkinsBuildDto {
   @JsonProperty("full_url")
   private String fullUrl;
 
-  private long number;
+  private Long number;
   private String phase;
   private String status;
   private String url;

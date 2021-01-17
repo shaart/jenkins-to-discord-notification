@@ -10,6 +10,8 @@
 
 |Name|Description|Default value|
 |----|-----------|-------------|
+| JENKINS2DISCORD_JENKINS_USER_USERNAME | Username to access Jenkins | admin |
+| JENKINS2DISCORD_JENKINS_USER_PASSWORD | Password to access Jenkins | admin |
 | JENKINS2DISCORD_DISCORD_MESSAGE_USERNAME | Username that will be displayed in Discord's message | |
 | JENKINS2DISCORD_DISCORD_MESSAGE_AVATAR-URL | URL to image that will be displayed in Discord's message | |
 | JENKINS2DISCORD_DISCORD_MESSAGE_PREFIX | Prefix that will be displayed in Discord's message | [JENKINS] |
@@ -30,7 +32,7 @@ docker run \
 #### JRE
 ```bash
 java \
-  -d jenkins2discord.discord.webhook.url=https://discord.com/api/webhooks/<YOUR_WEBHOOK> \
-  -d jenkins2discord.jenkins.address=<YOUR_JENKINS_ADDRESS> \
+  -Djenkins2discord.discord.webhook.url=https://discord.com/api/webhooks/<YOUR_WEBHOOK> \
+  -Djenkins2discord.jenkins.address=<YOUR_JENKINS_ADDRESS> \
   -jar jenkins2discord-notification.jar
 ```

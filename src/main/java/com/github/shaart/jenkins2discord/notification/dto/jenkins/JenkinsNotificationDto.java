@@ -6,10 +6,12 @@ import lombok.Data;
 @Data
 public class JenkinsNotificationDto {
 
+  @JsonProperty("name")
   private String jobName;
 
   @JsonProperty("url")
   private String jobUrl;
 
+  @JsonProperty("build")
   private JenkinsBuildDto jobBuild;
 }

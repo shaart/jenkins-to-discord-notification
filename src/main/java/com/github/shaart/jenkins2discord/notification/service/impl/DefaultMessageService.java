@@ -28,7 +28,8 @@ public class DefaultMessageService implements MessageService {
 
     MessageDto discordMessage = notificationToMessageService.createMessage(notification);
     try {
-      log.debug("Sending a request to Discord's Webhook");
+      log.info("Sending a request to Discord's Webhook");
+      log.trace("Webhook url: {}", discordWebhookUrl);
       ResponseEntity<String> responseEntity =
           restTemplate.postForEntity(discordWebhookUrl, discordMessage, String.class);
       log.debug("Discord's response: {}", responseEntity);

@@ -17,13 +17,21 @@ public class Jenkins2DiscordProperties {
   public static class Jenkins {
 
     private String address;
+    private User user;
+  }
+
+  @Data
+  public static class User {
+
+    private String username;
+    private String password;
   }
 
   @Data
   public static class Discord {
 
     private Webhook webhook;
-    private MessageInfo messageInfo;
+    private MessageInfo message;
   }
 
   @Data
