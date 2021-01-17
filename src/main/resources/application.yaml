@@ -1,6 +1,14 @@
 server:
   port: 8080
 
+logging:
+  level: INFO
+    com:
+      github:
+        shaart:
+          jenkins2discord:
+            notification: INFO
+
 jenkins2discord:
   request:
     read-timeout: 5000
@@ -9,3 +17,8 @@ jenkins2discord:
     address: http://localhost:8080
   discord:
     webhook:
+      url:
+    message:
+      username:
+      avatar-url:
+      prefix: "[JENKINS]"

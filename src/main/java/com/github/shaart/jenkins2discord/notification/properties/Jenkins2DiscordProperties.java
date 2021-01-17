@@ -1,4 +1,4 @@
-package com.github.shaart.jenkins2discord.notification.config;
+package com.github.shaart.jenkins2discord.notification.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,12 +22,26 @@ public class Jenkins2DiscordProperties {
   @Data
   public static class Discord {
 
-    private String webhook;
+    private Webhook webhook;
+    private MessageInfo messageInfo;
+  }
+
+  @Data
+  public static class Webhook {
+
+    private String url;
+  }
+
+  @Data
+  public static class MessageInfo {
+
+    private String username;
+    private String avatarUrl;
+    private String prefix;
   }
 
   @Data
   public static class Request {
-
     private long connectTimeout;
     private long readTimeout;
   }

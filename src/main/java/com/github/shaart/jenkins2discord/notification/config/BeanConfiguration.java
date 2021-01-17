@@ -1,6 +1,7 @@
 package com.github.shaart.jenkins2discord.notification.config;
 
-import com.github.shaart.jenkins2discord.notification.config.Jenkins2DiscordProperties.Request;
+import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties;
+import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties.Request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

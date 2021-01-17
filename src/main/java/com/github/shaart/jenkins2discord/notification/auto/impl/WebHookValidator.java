@@ -3,7 +3,7 @@ package com.github.shaart.jenkins2discord.notification.auto.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.shaart.jenkins2discord.notification.auto.AutoValidator;
-import com.github.shaart.jenkins2discord.notification.config.Jenkins2DiscordProperties;
+import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties;
 import com.github.shaart.jenkins2discord.notification.dto.discord.FailWebhookInfoDto;
 import com.github.shaart.jenkins2discord.notification.dto.discord.WebhookInfoDto;
 import com.github.shaart.jenkins2discord.notification.exception.ValidationException;
@@ -24,14 +24,14 @@ public class WebHookValidator implements AutoValidator {
 
   @Override
   public void validate() throws JsonProcessingException {
-    String discordWebhook = properties.getDiscord().getWebhook();
+    String discordWebhookUrl = properties.getDiscord().getWebhook().getUrl();
     log.debug("Requesting for Discord Webhook info");
-    log.trace("Discord webhook is: {}", discordWebhook);
-    ResponseEntity<String> responseEntity = restTemplate.getForEntity(discordWebhook, String.class);
+    log.trace("Discord webhook is: {}", discordWebhookUrl);
+    ResponseEntity<String> response = restTemplate.getForEntity(discordWebhookUrl, String.class);
 
-    String jsonBody = responseEntity.getBody();
+    String jsonBody = response.getBody();
     ObjectMapper jsonMapper = new ObjectMapper();
-    if (responseEntity.getStatusCode() != HttpStatus.OK) {
+    if (response.getStatusCode() != HttpStatus.OK) {
       log.error("Response from discord server was not OK");
       FailWebhookInfoDto failInfo = jsonMapper.readValue(jsonBody, FailWebhookInfoDto.class);
       String errorMessage = "The Discord server response was not OK: " + failInfo.toString();

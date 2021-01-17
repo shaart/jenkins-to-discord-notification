@@ -1,7 +1,7 @@
 package com.github.shaart.jenkins2discord.notification.auto.impl;
 
 import com.github.shaart.jenkins2discord.notification.auto.AutoValidator;
-import com.github.shaart.jenkins2discord.notification.config.Jenkins2DiscordProperties;
+import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties;
 import com.github.shaart.jenkins2discord.notification.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
