@@ -27,23 +27,27 @@ public class JenkinsValidator implements AutoValidator {
 
   @Override
   public void validate() {
-    String jenkinsAddress = properties.getJenkins().getAddress();
-    log.debug("Requesting for Jenkins info");
-    log.trace("Jenkins address is: {}", jenkinsAddress);
-    try {
-      ResponseEntity<String> responseEntity = restTemplate
-          .getForEntity(jenkinsAddress, String.class);
+    boolean isNeededJenkinsConnection = false;
+    log.info("Is needed Jenkins connection = {}", isNeededJenkinsConnection);
+    if (isNeededJenkinsConnection) {
+      String jenkinsAddress = properties.getJenkins().getAddress();
+      log.debug("Requesting for Jenkins info");
+      log.trace("Jenkins address is: {}", jenkinsAddress);
+      try {
+        ResponseEntity<String> responseEntity = restTemplate
+            .getForEntity(jenkinsAddress, String.class);
 
-      HttpHeaders headers = responseEntity.getHeaders();
-      String jenkinsVersion = headers.getFirst("X-Jenkins");
-      if (StringUtils.hasText(jenkinsVersion)) {
-        log.debug("Got a jenkins version: {}", jenkinsVersion);
-        return;
+        HttpHeaders headers = responseEntity.getHeaders();
+        String jenkinsVersion = headers.getFirst("X-Jenkins");
+        if (StringUtils.hasText(jenkinsVersion)) {
+          log.debug("Got a jenkins version: {}", jenkinsVersion);
+          return;
+        }
+      } catch (RestClientException e) {
+        log.error(e.getMessage(), e);
+        throw new ValidationException("Jenkins version receiving was failed");
       }
-    } catch (RestClientException e) {
-      log.error(e.getMessage(), e);
       throw new ValidationException("Jenkins version receiving was failed");
     }
-    throw new ValidationException("Jenkins version receiving was failed");
   }
 }
