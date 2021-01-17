@@ -1,0 +1,1 @@
+docker build -t jenkins2discord-notification -f docker/Dockerfile .
