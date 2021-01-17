@@ -19,13 +19,18 @@
 | JENKINS2DISCORD_REQUEST_CONNECT-TIMEOUT | Time in millis to establish a connection between hosts | 5000 |
 | LOGGING_LEVEL_COM_GITHUB_SHAART_JENKINS2DISCORD_NOTIFICATION | Log level for this application | INFO |
 
+- Build a jar
+```shell script
+./gradlew bootJar
+``` 
+
 #### Docker
 ##### Build an image
-```bash
+```shell script
 docker build -t jenkins2discord-notification -f docker/Dockerfile .
 ```
 ##### Run built image
-```bash
+```shell script
 docker run \ 
   -e JENKINS2DISCORD_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/<YOUR_WEBHOOK> \
   -e JENKINS2DISCORD_JENKINS_ADDRESS=<YOUR_JENKINS_ADDRESS> \
@@ -37,7 +42,7 @@ docker run \
 ```
 
 #### JRE
-```bash
+```shell script
 java \
   -Djenkins2discord.discord.webhook.url=https://discord.com/api/webhooks/<YOUR_WEBHOOK> \
   -Djenkins2discord.jenkins.address=<YOUR_JENKINS_ADDRESS> \
