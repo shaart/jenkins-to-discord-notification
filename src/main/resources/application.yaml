@@ -1,2 +1,8 @@
 server:
   port: 8080
+
+jenkins2discord:
+  jenkins:
+    address: http://localhost:8080
+  discord:
+    webhook:
