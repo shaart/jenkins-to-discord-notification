@@ -4,9 +4,16 @@ plugins {
     id 'java'
 }
 
+ext {
+    springCloudContractWiremockVersion = '2.2.5.RELEASE'
+    wiremockVersion = '1.58'
+    lombokVersion = '1.18.16'
+}
+
 group = 'com.github.shaart'
-version = '0.0.1'
+version = '0.0.2'
 sourceCompatibility = '8'
+targetCompatibility = '8'
 
 configurations {
     compileOnly {
@@ -19,12 +26,19 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator',
+            'org.springframework.boot:spring-boot-starter-web'
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test',
+            "com.github.tomakehurst:wiremock:${wiremockVersion}",
+            "org.springframework.cloud:spring-cloud-contract-wiremock:${springCloudContractWiremockVersion}"
+
 }
 
 test {

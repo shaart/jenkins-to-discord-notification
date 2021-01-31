@@ -1,0 +1,4 @@
+jenkins2discord:
+  discord:
+    webhook:
+      url: http://localhost:8089/api/webhooks/800303589935157777/P2TQUq-LU28_qRzlMpF8KYbzCMw4cGXvIFxjslOrmUcikmmLTXn-WcuuWcuuWcuuWcuu

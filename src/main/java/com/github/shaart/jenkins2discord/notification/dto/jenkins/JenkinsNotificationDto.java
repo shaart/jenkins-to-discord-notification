@@ -1,5 +1,6 @@
 package com.github.shaart.jenkins2discord.notification.dto.jenkins;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -14,4 +15,12 @@ public class JenkinsNotificationDto {
 
   @JsonProperty("build")
   private JenkinsBuildDto jobBuild;
+
+  @JsonIgnore
+  public JenkinsBuildDto getJobBuild() {
+    if (jobBuild == null) {
+      jobBuild = new JenkinsBuildDto();
+    }
+    return jobBuild;
+  }
 }

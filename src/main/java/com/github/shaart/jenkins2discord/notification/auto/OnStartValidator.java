@@ -20,7 +20,7 @@ public class OnStartValidator implements ApplicationListener<ContextRefreshedEve
   private final List<AutoValidator> autoValidators;
 
   @Override
-  public void onApplicationEvent(ContextRefreshedEvent event) {
+  public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
     autoValidate();
   }
 
@@ -30,12 +30,14 @@ public class OnStartValidator implements ApplicationListener<ContextRefreshedEve
 
     if (!errors.isEmpty()) {
       log.error("Got startup errors:");
+      StartupException startupException = new StartupException(
+          "There are startup errors (count = " + errors.size() + "). Please check the log above.");
       for (int i = 0; i < errors.size(); i++) {
         Exception exception = errors.get(i);
+        startupException.addSuppressed(exception);
         log.error("Startup error #" + (i + 1) + ": " + exception.getMessage(), exception);
       }
-      throw new StartupException(
-          "There are startup errors (count = " + errors.size() + "). Please check the log above.");
+      throw startupException;
     }
   }
 

@@ -25,3 +25,4 @@ jenkins2discord:
       username:
       avatar-url:
       prefix: "[JENKINS]"
+      template-path: classpath:templates/discord_message.template

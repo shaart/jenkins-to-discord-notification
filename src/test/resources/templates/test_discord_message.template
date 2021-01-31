@@ -1,0 +1,4 @@
+[TEST] Сборка ${JOB_NAME} (#${BUILD_NUMBER}): фаза - ${BUILD_PHASE}, статус - ${BUILD_STATUS}
+Ссылка на сборку: ${BUILD_FULL_URL}
+Кто запустил: ${JOB_USER}
+Параметры сборки: ${JOB_PARAMETERS}

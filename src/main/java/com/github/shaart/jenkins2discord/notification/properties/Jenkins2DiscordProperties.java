@@ -1,11 +1,13 @@
 package com.github.shaart.jenkins2discord.notification.properties;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Data
 @Component
+@NoArgsConstructor
 @ConfigurationProperties(prefix = "jenkins2discord")
 public class Jenkins2DiscordProperties {
 
@@ -45,7 +47,7 @@ public class Jenkins2DiscordProperties {
 
     private String username;
     private String avatarUrl;
-    private String prefix;
+    private String templatePath;
   }
 
   @Data
