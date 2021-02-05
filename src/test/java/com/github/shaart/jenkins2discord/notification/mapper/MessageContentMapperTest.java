@@ -10,6 +10,7 @@ import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsJobInfo
 import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsJobParameterInfo;
 import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsNotificationDto;
 import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsVersionControlSystemDto;
+import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -77,7 +78,8 @@ class MessageContentMapperTest {
 
   @BeforeEach
   public void setUp() {
-    messageContentMapper = new MessageContentMapper();
+    Jenkins2DiscordProperties properties = Jenkins2DiscordProperties.empty();
+    messageContentMapper = new MessageContentMapper(properties);
 
     jobInfo = new JenkinsJobInfo();
     jobInfo.setActions(new ArrayList<>());

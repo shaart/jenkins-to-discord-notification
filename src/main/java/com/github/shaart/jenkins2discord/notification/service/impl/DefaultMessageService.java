@@ -1,9 +1,9 @@
 package com.github.shaart.jenkins2discord.notification.service.impl;
 
-import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties;
 import com.github.shaart.jenkins2discord.notification.dto.CommonResponseDto;
 import com.github.shaart.jenkins2discord.notification.dto.discord.MessageDto;
 import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsNotificationDto;
+import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties;
 import com.github.shaart.jenkins2discord.notification.service.MessageService;
 import com.github.shaart.jenkins2discord.notification.service.NotificationToMessageService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,15 @@ public class DefaultMessageService implements MessageService {
     String discordWebhookUrl = properties.getDiscord().getWebhook().getUrl();
 
     MessageDto discordMessage = notificationToMessageService.createMessage(notification);
+    if (discordMessage.isIgnored()) {
+      log.info("Ignored message for notification: {}", discordMessage);
+      return CommonResponseDto.createSuccess();
+    }
+    return sendMessageToDiscord(discordWebhookUrl, discordMessage);
+  }
+
+  private CommonResponseDto sendMessageToDiscord(String discordWebhookUrl,
+      MessageDto discordMessage) {
     try {
       log.info("Sending a request to Discord's Webhook");
       log.trace("Webhook url: {}", discordWebhookUrl);

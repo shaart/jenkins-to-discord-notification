@@ -18,6 +18,12 @@ jenkins2discord:
     user:
       username: admin
       password: admin
+    job-filters:
+      - name:
+        display-parameters:
+        filter-by-parameters:
+          - name:
+            allowed-values:
   discord:
     webhook:
       url:
