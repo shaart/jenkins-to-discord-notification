@@ -1,5 +1,33 @@
 # How to run
-* Specify required ENV variables:
+* Specify file `jenkins2discord.yaml` with following structure
+```yaml
+jenkins2discord:
+  request:
+    read-timeout: 5000
+    connect-timeout: 5000
+  jenkins:
+    address: http://localhost:8080
+    user:
+      username: admin
+      password: admin
+    job-filters:
+      - name:
+        display-parameters:
+        filter-by-parameters:
+          - name:
+            allowed-values:
+  discord:
+    webhook:
+      url:
+    message:
+      username:
+      avatar-url:
+      prefix: "[JENKINS]"
+      template-path: classpath:templates/discord_message.template
+```
+* Specify ENV variable: `SPRING_CONFIG_LOCATION: file:///F:/jenkins2discord.yaml` - your path to .yaml file
+* Mount file into container if needed
+* Specify required ENV variables if not specified in the `jenkins2discord.yaml`:
 
 |Name|Since|Description|Default value|
 |----|-----|-----------|-------------|
@@ -79,4 +107,75 @@ java \
 Параметры сборки: 
  - GIT_PROJECT: j2d-notification
  - GIT_BRANCH: develop
+```
+
+## Jenkins jobs filters
+### Structure
+```yaml
+jenkins2discord:
+  jenkins:
+    job-filters:
+      - name:
+        display-parameters:
+        filter-by-parameters:
+          - name:
+            allowed-values:
+```
+### Uses
+- For each job (name is empty) display only parameter `GIT_BRANCH`:
+```yaml
+
+jenkins2discord:
+  jenkins:
+    job-filters:
+      - name: 
+        display-parameters: GIT_BRANCH
+        filter-by-parameters:
+          - name:
+            allowed-values:
+```
+- For each job (name is empty) where there is a parameter `GIT_BRANCH`:
+```yaml
+
+jenkins2discord:
+  jenkins:
+    job-filters:
+      - name: 
+        display-parameters: 
+        filter-by-parameters:
+          - name: GIT_BRANCH
+            allowed-values:
+```
+- For each job (name is empty) where there is a parameter `GIT_BRANCH` with value `develop` 
+or `master`:
+```yaml
+
+jenkins2discord:
+  jenkins:
+    job-filters:
+      - name: 
+        display-parameters: 
+        filter-by-parameters:
+          - name: GIT_BRANCH
+            allowed-values: develop,master
+```
+- Ignore all jobs except `firstJob` and `secondJob`:
+```yaml
+
+jenkins2discord:
+  jenkins:
+    job-filters:
+      - name: firstJob
+      - name: secondJob
+```
+- Ignore all jobs except `firstJob` and `secondJob`. Also display only parameters `GIT_BRANCH` 
+and `NAMESPACE` from `secondJob`:
+```yaml
+
+jenkins2discord:
+  jenkins:
+    job-filters:
+      - name: firstJob
+      - name: secondJob
+        display-parameters: GIT_BRANCH,NAMESPACE
 ```

@@ -8,27 +8,3 @@ logging:
         shaart:
           jenkins2discord:
             notification: INFO
-
-jenkins2discord:
-  request:
-    read-timeout: 5000
-    connect-timeout: 5000
-  jenkins:
-    address: http://localhost:8080
-    user:
-      username: admin
-      password: admin
-    job-filters:
-      - name:
-        display-parameters:
-        filter-by-parameters:
-          - name:
-            allowed-values:
-  discord:
-    webhook:
-      url:
-    message:
-      username:
-      avatar-url:
-      prefix: "[JENKINS]"
-      template-path: classpath:templates/discord_message.template

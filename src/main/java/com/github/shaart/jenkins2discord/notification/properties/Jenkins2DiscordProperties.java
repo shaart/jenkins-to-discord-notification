@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.shaart.jenkins2discord.notification.dto.PairDto;
 import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsJobInfo;
 import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsNotificationDto;
+import com.github.shaart.jenkins2discord.notification.factory.YamlPropertySourceFactory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,44 +23,28 @@ import java.util.Objects;
 @Component
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "jenkins2discord")
+@PropertySource(value = "classpath:jenkins2discord.yaml", factory = YamlPropertySourceFactory.class)
 public class Jenkins2DiscordProperties {
 
-  private Jenkins jenkins;
-  private Discord discord;
-  private Request request;
+  private Jenkins jenkins = Jenkins.empty();
+  private Discord discord = Discord.empty();
+  private Request request = Request.empty();
 
   @JsonIgnore
   public static Jenkins2DiscordProperties empty() {
-    Jenkins2DiscordProperties jenkins2DiscordProperties = new Jenkins2DiscordProperties();
-    Jenkins jenkins = new Jenkins();
-    jenkins.setJobFilters(emptyList());
-
-    User user = new User();
-    jenkins.setUser(user);
-
-    jenkins2DiscordProperties.setJenkins(jenkins);
-
-    Discord discord = new Discord();
-
-    Webhook webhook = new Webhook();
-    discord.setWebhook(webhook);
-
-    MessageInfo message = new MessageInfo();
-    discord.setMessage(message);
-    jenkins2DiscordProperties.setDiscord(discord);
-
-    Request request = new Request();
-    jenkins2DiscordProperties.setRequest(request);
-
-    return jenkins2DiscordProperties;
+    return new Jenkins2DiscordProperties();
   }
 
   @Data
   public static class Jenkins {
 
     private String address;
-    private User user;
-    private List<JobFilter> jobFilters;
+    private User user = User.empty();
+    private List<JobFilter> jobFilters = emptyList();
+
+    public static Jenkins empty() {
+      return new Jenkins();
+    }
   }
 
   @Data
@@ -66,6 +52,10 @@ public class Jenkins2DiscordProperties {
 
     private String username;
     private String password;
+
+    public static User empty() {
+      return new User();
+    }
   }
 
   @Data
@@ -75,8 +65,10 @@ public class Jenkins2DiscordProperties {
   public static class JobFilter {
 
     private String name;
-    private List<String> displayParameters;
-    private List<FilteringParameter> filterByParameters;
+    @Builder.Default
+    private List<String> displayParameters = emptyList();
+    @Builder.Default
+    private List<FilteringParameter> filterByParameters = emptyList();
 
     @JsonIgnore
     public boolean matchesJobName(JenkinsNotificationDto notification) {
@@ -121,7 +113,8 @@ public class Jenkins2DiscordProperties {
   public static class FilteringParameter {
 
     private String name;
-    private List<String> allowedValues;
+    @Builder.Default
+    private List<String> allowedValues = emptyList();
 
     public boolean hasName(String parameterName) {
       return name == null || name.equals(parameterName);
@@ -131,14 +124,22 @@ public class Jenkins2DiscordProperties {
   @Data
   public static class Discord {
 
-    private Webhook webhook;
-    private MessageInfo message;
+    private Webhook webhook = Webhook.empty();
+    private MessageInfo message = MessageInfo.empty();
+
+    public static Discord empty() {
+      return new Discord();
+    }
   }
 
   @Data
   public static class Webhook {
 
     private String url;
+
+    public static Webhook empty() {
+      return new Webhook();
+    }
   }
 
   @Data
@@ -147,12 +148,20 @@ public class Jenkins2DiscordProperties {
     private String username;
     private String avatarUrl;
     private String templatePath;
+
+    public static MessageInfo empty() {
+      return new MessageInfo();
+    }
   }
 
   @Data
   public static class Request {
 
-    private long connectTimeout;
-    private long readTimeout;
+    private long connectTimeout = 5000;
+    private long readTimeout = 5000;
+
+    public static Request empty() {
+      return new Request();
+    }
   }
 }
