@@ -28,4 +28,13 @@ public class MessageDto {
         .isIgnored(true)
         .build();
   }
+
+  public static MessageDto createFrom(MessageDto other, String content) {
+    return MessageDto.builder()
+        .username(other.username)
+        .avatarUrl(other.avatarUrl)
+        .content(content)
+        .isIgnored(other.isIgnored)
+        .build();
+  }
 }
