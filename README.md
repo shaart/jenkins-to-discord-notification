@@ -1,75 +1,91 @@
+# Docker Hub
+https://hub.docker.com/r/imshaart/j2d-notify
+
 # How to run
-* Specify file `jenkins2discord.yaml` with following structure
+#### Notice about ENV
+The ENV variable JENKINS2DISCORD_DISCORD_WEBHOOK_URL is equal to yaml
 ```yaml
 jenkins2discord:
-  request:
-    read-timeout: 5000
-    connect-timeout: 5000
-  jenkins:
-    check-on-startup: false
-    address: http://localhost:8080
-    user:
-      username: admin
-      password: admin
-    job-filters:
-      - name:
-        display-parameters:
-        filter-by-parameters:
-          - name:
-            allowed-values:
   discord:
     webhook:
       url:
-    message:
-      username:
-      avatar-url:
-      prefix: "[JENKINS]"
-      template-path: classpath:templates/discord_message.template
 ```
-* Specify ENV variable: `SPRING_CONFIG_LOCATION: file:///F:/jenkins2discord.yaml` - your path to .yaml file
-* Mount file into container if needed
-* Specify required ENV variables if not specified in the `jenkins2discord.yaml`:
+#### Steps
+1. Specify file `jenkins2discord.yaml` with following structure
+    ```yaml
+    jenkins2discord:
+      request:
+        read-timeout: 5000
+        connect-timeout: 5000
+      jenkins:
+        check-on-startup: false
+        address: http://localhost:8080
+        user:
+          username: admin
+          password: admin
+        job-filters:
+          - name:
+            display-parameters:
+            filter-by-parameters:
+              - name:
+                allowed-values:
+      discord:
+        webhook:
+          url:
+        message:
+          username:
+          avatar-url:
+          prefix: "[JENKINS]"
+          template-path: classpath:templates/discord_message.template
+    ```
+2. Specify ENV variable: `SPRING_CONFIG_LOCATION: file:///F:/jenkins2discord.yaml` - your path to .yaml file
+3. Mount file into container if needed
+4. Specify **required** ENV variables if not specified in the `jenkins2discord.yaml`:
+    
+    |Name|Since|Description|Default value|
+    |----|-----|-----------|-------------|
+    | JENKINS2DISCORD_DISCORD_WEBHOOK_URL | 0.0.1 | Target Webhook where a message will be pushed. Your Discord Server -> Settings -> Integrations -> Webhooks -> Copy Webhook URL | |
+    | JENKINS2DISCORD_JENKINS_ADDRESS | 0.0.1 |  URL to your jenkins like: http://localhost:8080 | http://localhost:8080 |
+    | JENKINS2DISCORD_JENKINS_USER_USERNAME | 0.0.1 |  Username to access Jenkins | admin |
+    | JENKINS2DISCORD_JENKINS_USER_PASSWORD | 0.0.1 |  Password to access Jenkins | admin |
 
-|Name|Since|Description|Default value|
-|----|-----|-----------|-------------|
-| JENKINS2DISCORD_DISCORD_WEBHOOK_URL | 0.0.1 | Target Webhook where a message will be pushed. Your Discord Server -> Settings -> Integrations -> Webhooks -> Copy Webhook URL | |
-| JENKINS2DISCORD_JENKINS_ADDRESS | 0.0.1 |  URL to your jenkins like: http://localhost:8080 | http://localhost:8080 |
-| JENKINS2DISCORD_JENKINS_USER_USERNAME | 0.0.1 |  Username to access Jenkins | admin |
-| JENKINS2DISCORD_JENKINS_USER_PASSWORD | 0.0.1 |  Password to access Jenkins | admin |
+5. Specify additional ENV variables (if needed)
+    
+    |Name|Since|Description|Default value|
+    |----|-----|-----------|-------------|
+    | JENKINS2DISCORD_DISCORD_MESSAGE_USERNAME | 0.0.1 |  Username that will be displayed in Discord's message | |
+    | JENKINS2DISCORD_DISCORD_MESSAGE_AVATAR-URL | 0.0.1 |  URL to image that will be displayed in Discord's message | |
+    | *[DEPRECATED SINCE 0.0.2]* JENKINS2DISCORD_DISCORD_MESSAGE_PREFIX | 0.0.1 |  *[DEPRECATED]* (use message template)<br> Prefix that will be displayed in Discord's message | [JENKINS] |
+    | JENKINS2DISCORD_DISCORD_MESSAGE_TEMPLATE-PATH | 0.0.2 | A path to discord message's template.<br>Default path specifies a path to embedded default template. See ["Discord message template"](#discord-message-template) for more details | classpath:templates/discord_message.template |
+    | JENKINS2DISCORD_REQUEST_READ-TIMEOUT | 0.0.1 |  Time in millis to receive response | 5000 |
+    | JENKINS2DISCORD_REQUEST_CONNECT-TIMEOUT | 0.0.1 |  Time in millis to establish a connection between hosts | 5000 |
+    | JENKINS2DISCORD_JENKINS_CHECK-ON-STARTUP | 0.0.4 | Is needed to check jenkins connection at startup | false |
+    | LOGGING_LEVEL_COM_GITHUB_SHAART_JENKINS2DISCORD_NOTIFICATION | 0.0.1 |  Log level for this application | INFO |
 
-* Specify additional ENV variables (if needed)
-
-|Name|Since|Description|Default value|
-|----|-----|-----------|-------------|
-| JENKINS2DISCORD_DISCORD_MESSAGE_USERNAME | 0.0.1 |  Username that will be displayed in Discord's message | |
-| JENKINS2DISCORD_DISCORD_MESSAGE_AVATAR-URL | 0.0.1 |  URL to image that will be displayed in Discord's message | |
-| *[DEPRECATED SINCE 0.0.2]* JENKINS2DISCORD_DISCORD_MESSAGE_PREFIX | 0.0.1 |  *[DEPRECATED]* Prefix that will be displayed in Discord's message | [JENKINS] |
-| JENKINS2DISCORD_DISCORD_MESSAGE_TEMPLATE-PATH | 0.0.2 | A path to discord message's template.<br>Default path specifies a path to embedded default template. See ["Discord message template"](#discord-message-template) for more details | classpath:templates/discord_message.template |
-| JENKINS2DISCORD_REQUEST_READ-TIMEOUT | 0.0.1 |  Time in millis to receive response | 5000 |
-| JENKINS2DISCORD_REQUEST_CONNECT-TIMEOUT | 0.0.1 |  Time in millis to establish a connection between hosts | 5000 |
-| JENKINS2DISCORD_JENKINS_CHECK-ON-STARTUP | 0.0.4 | Is needed to check jenkins connection at startup | false |
-| LOGGING_LEVEL_COM_GITHUB_SHAART_JENKINS2DISCORD_NOTIFICATION | 0.0.1 |  Log level for this application | INFO |
-
-- Build a jar
-```shell script
-./gradlew bootJar
-``` 
+6. *(Optional)* Build a jar
+    ```shell script
+    ./gradlew bootJar
+    ``` 
+7. *(Optional)* Build a docker image
+8. Run a container with docker [(see below)](#run_container) or use your docker-compose or run jar-file via `java -jar` [(see below)](#jre)
 
 #### Docker
-##### Build an image
+##### How to build an image
 ```shell script
-docker build -t jenkins2discord-notification -f docker/Dockerfile .
+docker build -t imshaart/j2d-notify:custom -f docker/Dockerfile .
 ```
-##### Run built image
+##### Run a container from image {#run_container}
 ```shell script
 docker run \ 
   -e JENKINS2DISCORD_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/<YOUR_WEBHOOK> \
   -e JENKINS2DISCORD_JENKINS_ADDRESS=<YOUR_JENKINS_ADDRESS> \
   -e JENKINS2DISCORD_JENKINS_USER_USERNAME=<YOUR_JENKINS_USERNAME> \
   -e JENKINS2DISCORD_JENKINS_USER_PASSWORD=<YOUR_JENKINS_PASSWORD> \
-  --name jenkins2discord-notification \
+  -e SPRING_CONFIG_LOCATION=/j2d-notify/jenkins2discord.yaml \
+  -v <YOUR_DIRECTORY>/jenkins2discord.yaml:/j2d-notify/jenkins2discord.yaml \
+  --name j2d-notify \
   -p 8080:8080 \ 
-  jenkins2discord-notification:latest
+  imshaart/j2d-notify:latest
 ```
 
 #### JRE
@@ -79,6 +95,7 @@ java \
   -Djenkins2discord.jenkins.address=<YOUR_JENKINS_ADDRESS> \
   -Djenkins2discord.jenkins.user.username=<YOUR_JENKINS_USERNAME> \
   -Djenkins2discord.jenkins.user.password=<YOUR_JENKINS_PASSWORD> \
+  -Dspring.config.location=/j2d-notify/jenkins2discord.yaml \
   -jar jenkins2discord-notification.jar
 ```
 
