@@ -454,7 +454,7 @@ class DefaultNotificationToMessageServiceTest {
   }
 
   @Test
-  @DisplayName("Job has no SEEKING display parameter -> message with no build parameters")
+  @DisplayName("Job's parameters don't match SEEKING display build's parameter -> message with no build parameters")
   void createMessageNoDisplayParameterInJobCausesAbsentParametersSection()
       throws JsonProcessingException {
     createMessageWithActiveFilters(
