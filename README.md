@@ -6,6 +6,7 @@ jenkins2discord:
     read-timeout: 5000
     connect-timeout: 5000
   jenkins:
+    check-on-startup: false
     address: http://localhost:8080
     user:
       username: admin
@@ -38,14 +39,15 @@ jenkins2discord:
 
 * Specify additional ENV variables (if needed)
 
-|Name|Description|Default value|
-|----|-----------|-------------|
+|Name|Since|Description|Default value|
+|----|-----|-----------|-------------|
 | JENKINS2DISCORD_DISCORD_MESSAGE_USERNAME | 0.0.1 |  Username that will be displayed in Discord's message | |
 | JENKINS2DISCORD_DISCORD_MESSAGE_AVATAR-URL | 0.0.1 |  URL to image that will be displayed in Discord's message | |
 | *[DEPRECATED SINCE 0.0.2]* JENKINS2DISCORD_DISCORD_MESSAGE_PREFIX | 0.0.1 |  *[DEPRECATED]* Prefix that will be displayed in Discord's message | [JENKINS] |
 | JENKINS2DISCORD_DISCORD_MESSAGE_TEMPLATE-PATH | 0.0.2 | A path to discord message's template.<br>Default path specifies a path to embedded default template. See ["Discord message template"](#discord-message-template) for more details | classpath:templates/discord_message.template |
 | JENKINS2DISCORD_REQUEST_READ-TIMEOUT | 0.0.1 |  Time in millis to receive response | 5000 |
 | JENKINS2DISCORD_REQUEST_CONNECT-TIMEOUT | 0.0.1 |  Time in millis to establish a connection between hosts | 5000 |
+| JENKINS2DISCORD_JENKINS_CHECK-ON-STARTUP | 0.0.4 | Is needed to check jenkins connection at startup | false |
 | LOGGING_LEVEL_COM_GITHUB_SHAART_JENKINS2DISCORD_NOTIFICATION | 0.0.1 |  Log level for this application | INFO |
 
 - Build a jar

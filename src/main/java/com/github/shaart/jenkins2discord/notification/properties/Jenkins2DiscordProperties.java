@@ -38,6 +38,7 @@ public class Jenkins2DiscordProperties {
   @Data
   public static class Jenkins {
 
+    private Boolean checkOnStartup = false;
     private String address;
     private User user = User.empty();
     private List<JobFilter> jobFilters = emptyList();
