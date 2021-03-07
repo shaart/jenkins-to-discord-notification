@@ -1,1 +1,1 @@
-docker build -t jenkins2discord-notification -f docker/Dockerfile .
+docker build -t imshaart/j2d-notify:latest -f docker/Dockerfile .
