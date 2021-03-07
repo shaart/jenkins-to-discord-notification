@@ -6,6 +6,8 @@ import com.github.shaart.jenkins2discord.notification.dto.jenkins.JenkinsNotific
 import com.github.shaart.jenkins2discord.notification.properties.Jenkins2DiscordProperties;
 import com.github.shaart.jenkins2discord.notification.service.MessageService;
 import com.github.shaart.jenkins2discord.notification.service.NotificationToMessageService;
+import com.github.shaart.jenkins2discord.notification.strings.StringAnalyzer;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DefaultMessageService implements MessageService {
 
+  public static final int DISCORD_MAX_MESSAGE_LENGTH = 2000;
+
   private final RestTemplate restTemplate;
   private final Jenkins2DiscordProperties properties;
   private final NotificationToMessageService notificationToMessageService;
+  private final StringAnalyzer stringAnalyzer;
 
   @Override
   public CommonResponseDto sendMessage(JenkinsNotificationDto notification) {
@@ -35,13 +42,24 @@ public class DefaultMessageService implements MessageService {
   }
 
   private CommonResponseDto sendMessageToDiscord(String discordWebhookUrl,
-      MessageDto discordMessage) {
+      @NonNull MessageDto discordMessage) {
     try {
       log.info("Sending a request to Discord's Webhook");
       log.trace("Webhook url: {}", discordWebhookUrl);
-      ResponseEntity<String> responseEntity =
-          restTemplate.postForEntity(discordWebhookUrl, discordMessage, String.class);
-      log.debug("Discord's response: {}", responseEntity);
+      String initialContent = discordMessage.getContent();
+      List<String> messages = stringAnalyzer.splitToMessages(initialContent);
+      messages.forEach(aMessage -> {
+        MessageDto messageToSend = MessageDto.createFrom(discordMessage, aMessage);
+        String messageToSendContent = messageToSend.getContent();
+        log.info("Sending message part with length = {}",
+            stringAnalyzer.getContentLengthOrUnknown(messageToSendContent));
+        log.trace("Message content: {}", messageToSendContent);
+
+        ResponseEntity<String> responseEntity =
+            restTemplate.postForEntity(discordWebhookUrl, messageToSend, String.class);
+        log.debug("Discord's response: {}", responseEntity);
+      });
+
       return CommonResponseDto.createSuccess();
     } catch (RestClientException e) {
       log.error("An error occurred on Discord webhook request", e);

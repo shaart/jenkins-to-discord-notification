@@ -3,6 +3,7 @@ jenkins2discord:
     read-timeout: 5000
     connect-timeout: 5000
   jenkins:
+    check-on-startup: false
     address: http://localhost:8080
     user:
       username: admin

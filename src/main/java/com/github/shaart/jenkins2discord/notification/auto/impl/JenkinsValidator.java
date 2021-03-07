@@ -27,8 +27,8 @@ public class JenkinsValidator implements AutoValidator {
 
   @Override
   public void validate() {
-    boolean isNeededJenkinsConnection = false;
-    log.info("Is needed Jenkins connection = {}", isNeededJenkinsConnection);
+    boolean isNeededJenkinsConnection = properties.getJenkins().getCheckOnStartup();
+    log.info("Is needed to check Jenkins connection = {}", isNeededJenkinsConnection);
     if (isNeededJenkinsConnection) {
       String jenkinsAddress = properties.getJenkins().getAddress();
       log.debug("Requesting for Jenkins info");
