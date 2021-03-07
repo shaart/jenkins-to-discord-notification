@@ -38,6 +38,14 @@ public class StringAnalyzer {
       remainedContent.replace(0, remainedContent.length(),
           remainedContent.substring(DefaultMessageService.DISCORD_MAX_MESSAGE_LENGTH));
 
+      int lastIndexOfNewLine = messagePart.lastIndexOf('\n');
+      if (lastIndexOfNewLine > 0) {
+        int indexOfNewLineEnd = lastIndexOfNewLine + 1;
+        String addToNextPart = messagePart.substring(indexOfNewLineEnd);
+        messagePart = messagePart.substring(0, indexOfNewLineEnd);
+        remainedContent.insert(0, addToNextPart);
+      }
+
       int unclosedPreformattingIndex = getUnclosedPreformattingIndex(messagePart);
       if (unclosedPreformattingIndex > 0) {
         String addToNextPart = messagePart.substring(unclosedPreformattingIndex);
